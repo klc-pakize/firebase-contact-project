@@ -1,23 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Contact from "./components/contact/Contact";
+import Form from "./components/form/Form";
+import React, { useState } from "react";
+import { AddUser, EditUser } from "./uilts/firebase";
 
 function App() {
+  const [isAdd, setIsAdd] = useState("ADD");
+  const [form, setForm] = useState({
+    username: "",
+    phoneNumber: "",
+    gender: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setForm({
+      username: "",
+      phoneNumber: "",
+      gender: "",
+    });
+    if (form.id) {
+      EditUser(form);
+    } else {
+      AddUser(form);
+    }
+    setIsAdd("ADD");
+  };
+
+  const EditUserButton = (id, username, phoneNumber, gender) => {
+    setIsAdd("UPDATE");
+    setForm({ id, username, phoneNumber, gender });
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="app"></div>
+      <Form
+        form={form}
+        setForm={setForm}
+        handleSubmit={handleSubmit}
+        isAdd={isAdd}
+      />
+      <Contact EditUserButton={EditUserButton} />
     </div>
   );
 }
